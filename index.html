@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CreativeNav - 创意导航</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <style>
+      /*—— 全局 & 布局 ——*/
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #181c24 0%, #23272f 100%);
+        color: #ffffff;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /*—— 顶部区域 ——*/
+      .header {
+        background: rgba(31, 31, 31, 0.85);
+        padding: 24px 0 18px 0;
+        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(12px);
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.04);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .logo {
+        font-family: "Poppins", sans-serif;
+        font-size: 2.3rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #fff;
+        text-shadow: 0 2px 12px #0008;
+        display: inline-block;
+      }
+      .top-controls {
+        float: right;
+      }
+      .search-bar {
+        display: inline-block;
+        position: relative;
+        width: 340px;
+        margin-left: 32px;
+        vertical-align: middle;
+      }
+      .search-bar input {
+        width: 100%;
+        padding: 12px 48px 12px 18px;
+        border: none;
+        border-radius: 32px;
+        background: rgba(42, 42, 42, 0.95);
+        color: #eee;
+        font-size: 1rem;
+        box-shadow: 0 2px 12px 0 #0004;
+        outline: none;
+        transition: box-shadow 0.3s, background 0.3s;
+        border: 1.5px solid #23272f;
+      }
+      .search-bar input:focus {
+        background: #23272f;
+        box-shadow: 0 0 0 2px #4f8cff44, 0 2px 12px 0 #0004;
+      }
+      .search-icon {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4f8cff;
+        font-size: 1.2rem;
+        pointer-events: none;
+        filter: drop-shadow(0 0 2px #4f8cff88);
+      }
+
+      /*—— 导航栏 ——*/
+      .nav-wrapper {
+        background: rgba(24, 24, 24, 0.92);
+        box-shadow: 0 2px 12px 0 #0002;
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      }
+      .navbar {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+        gap: 8px;
+      }
+      .navbar button {
+        background: transparent;
+        border: none;
+        color: #bbb;
+        padding: 10px 22px;
+        margin: 0 2px;
+        font-size: 1.08rem;
+        border-radius: 24px;
+        cursor: pointer;
+        transition: color 0.25s, background 0.25s, box-shadow 0.25s;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+      .navbar button.active,
+      .navbar button:hover {
+        color: #fff;
+        background: linear-gradient(90deg, #4f8cff 0%, #7f53ff 100%);
+        box-shadow: 0 2px 8px 0 #4f8cff33;
+      }
+
+      /*—— 分类标题 ——*/
+      .category-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 36px 0 10px 0;
+      }
+      .category-title i {
+        font-size: 2.1rem;
+        color: #4f8cff;
+        filter: drop-shadow(0 0 4px #4f8cff44);
+      }
+      .category-title h2 {
+        font-size: 1.7rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #fff;
+        text-shadow: 0 2px 8px #0004;
+      }
+
+      /*—— 内容区 ——*/
+      .main .category {
+        display: none;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(30px);
+        transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .main .category.active {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+      }
+      .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 28px;
+        padding: 28px 0 10px 0;
+      }
+      .link-card {
+        background: linear-gradient(135deg, #23272f 80%, #2a2a2a 100%);
+        border-radius: 16px;
+        text-align: center;
+        padding: 28px 10px 18px 10px;
+        box-shadow: 0 2px 16px 0 #0003;
+        border: 2px solid transparent;
+        transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.22s, box-shadow 0.22s, border 0.22s;
+        position: relative;
+        overflow: hidden;
+      }
+      .link-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        padding: 2px;
+        background: linear-gradient(120deg, #4f8cff 0%, #7f53ff 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 0;
+      }
+      .link-card:hover::before {
+        opacity: 1;
+      }
+      .link-card:hover {
+        background: linear-gradient(135deg, #23272f 60%, #232b3a 100%);
+        transform: translateY(-10px) scale(1.045);
+        box-shadow: 0 12px 36px 0 #4f8cff33, 0 2px 16px 0 #0005;
+        border: 2px solid #4f8cff;
+      }
+      .icon-wrapper {
+        font-size: 2.2rem;
+        color: #fff;
+        margin-bottom: 12px;
+        z-index: 1;
+        position: relative;
+        text-shadow: 0 2px 8px #4f8cff22;
+      }
+      .link-card h3 {
+        font-size: 1.05rem;
+        color: #e0e6f0;
+        margin-top: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        z-index: 1;
+        position: relative;
+      }
+
+      /*—— 底部 ——*/
+      .footer {
+        background: rgba(31, 31, 31, 0.92);
+        padding: 24px 0 18px 0;
+        text-align: center;
+        color: #888;
+        font-size: 0.95rem;
+        border-top: 1.5px solid rgba(255, 255, 255, 0.04);
+        box-shadow: 0 -2px 12px 0 #0002;
+        backdrop-filter: blur(8px);
+        margin-top: 40px;
+      }
+      .footer a {
+        color: #888;
+        margin: 0 12px;
+        font-size: 1.2rem;
+        transition: color 0.3s;
+      }
+      .footer a:hover {
+        color: #4f8cff;
+      }
+
+      /*—— 响应式 ——*/
+      @media (max-width: 900px) {
+        .container {
+          padding: 0 8px;
+        }
+        .search-bar {
+          width: 220px;
+          margin-left: 10px;
+        }
+        .resource-grid {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 18px;
+        }
+        .category-title {
+          margin: 24px 0 8px 0;
+        }
+      }
+      @media (max-width: 600px) {
+        .header,
+        .footer {
+          padding: 14px 0;
+        }
+        .logo {
+          font-size: 1.3rem;
+        }
+        .search-bar {
+          width: 100%;
+          margin: 10px 0 0 0;
+          display: block;
+        }
+        .navbar {
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .navbar button {
+          font-size: 0.95rem;
+          padding: 7px 10px;
+        }
+        .category-title h2 {
+          font-size: 1.1rem;
+        }
+        .resource-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          padding: 10px 0 0 0;
+        }
+        .link-card {
+          padding: 16px 4px 10px 4px;
+          border-radius: 10px;
+        }
+        .icon-wrapper {
+          font-size: 1.3rem;
+        }
+      }
+
+      .header .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo {
+        margin-bottom: 18px;
+      }
+      .search-bar input {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <div
+        class="container"
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <h1 class="logo" style="margin-bottom: 18px">CreativeNav</h1>
+        <div class="search-bar">
+          <input type="text" />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="nav-wrapper">
+      <nav class="navbar">
+        <button class="active" data-category="all">
+          <i class="fas fa-home"></i>所有资源
+        </button>
+        <button data-category="ai-search">
+          <i class="fas fa-robot"></i>AI搜索
+        </button>
+        <button data-category="社交媒体">
+          <i class="fas fa-users"></i>社交媒体
+        </button>
+        <button data-category="实用工具">
+          <i class="fas fa-toolbox"></i>实用工具
+        </button>
+        <button data-category="科技资讯">
+          <i class="fas fa-flask"></i>科技资讯
+        </button>
+        <button data-category="云存储">
+          <i class="fas fa-cloud"></i>云存储
+        </button>
+        <button data-category="电子邮箱">
+          <i class="fas fa-envelope"></i>电子邮箱
+        </button>
+      </nav>
+    </div>
+
+    <main class="main">
+      <div class="container">
+        <!-- AI搜索分类 -->
+        <section class="category" data-category="ai-search">
+          <div class="category-title">
+            <i class="fas fa-robot"></i>
+            <h2>AI搜索</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://www.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Google"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-google" aria-hidden="true"></i>
+              </div>
+              <h3>Google</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://www.bing.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Bing"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-windows" aria-hidden="true"></i>
+              </div>
+              <h3>Bing</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://openrouter.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="openrouter"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+              </div>
+              <h3>openrouter</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://websim.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="websim"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              </div>
+              <h3>websim</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://chat.openai.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="chatgpt"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-google" aria-hidden="true"></i>
+              </div>
+              <h3>chatgpt</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://www.doubao.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="傻豆包"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-paw" aria-hidden="true"></i>
+              </div>
+              <h3>傻豆包</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://tongyi.aliyun.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="通义千问"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-rocketchat" aria-hidden="true"></i>
+              </div>
+              <h3>通义千问</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://kimi.moonshot.cn"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="kimi"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-regular fa-moon" aria-hidden="true"></i>
+              </div>
+              <h3>kimi</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://yiyan.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="文心一言"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-dumpster-fire" aria-hidden="true"></i>
+              </div>
+              <h3>文心一言</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://yuanbao.qq.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="腾讯元宝"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+              </div>
+              <h3>腾讯元宝</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://aistudio.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="google AIstudio"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+              </div>
+              <h3>google AIstudio</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://gemini.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="gemini"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-google-plus" aria-hidden="true"></i>
+              </div>
+              <h3>gemini</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://build.nvidia.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="nvidia"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-microchip" aria-hidden="true"></i>
+              </div>
+              <h3>nvidia</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://claude.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="claude"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+              </div>
+              <h3>claude</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://chat.chutes.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="chutesai"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+              </div>
+              <h3>chutesai</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://mistral.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="mistral"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-brain" aria-hidden="true"></i>
+              </div>
+              <h3>mistral</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://groq.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="groq"
+              ></a>
+              <div class="icon-wrapper">
+                <i
+                  class="fa-solid fa-group-arrows-rotate"
+                  aria-hidden="true"
+                ></i>
+              </div>
+              <h3>groq</h3>
+            </div>
+            <div class="link-card" data-category="ai-search">
+              <a
+                href="https://www.medscape.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="medscape"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+              </div>
+              <h3>medscape</h3>
+            </div>
+          </div>
+        </section>
+        <!-- 社交媒体分类 -->
+        <section class="category" data-category="社交媒体">
+          <div class="category-title">
+            <i class="fas fa-users"></i>
+            <h2>社交媒体</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://weibo.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="微博"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-weibo" aria-hidden="true"></i>
+              </div>
+              <h3>微博</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+              </div>
+              <h3>Twitter</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+              </div>
+              <h3>Facebook</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+              </div>
+              <h3>Instagram</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://www.zhihu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="知乎"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-quora" aria-hidden="true"></i>
+              </div>
+              <h3>知乎</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://www.reddit.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Reddit"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-reddit" aria-hidden="true"></i>
+              </div>
+              <h3>Reddit</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+              </div>
+              <h3>LinkedIn</h3>
+            </div>
+            <div class="link-card" data-category="社交媒体">
+              <a
+                href="https://telegram.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-telegram" aria-hidden="true"></i>
+              </div>
+              <h3>Telegram</h3>
+            </div>
+          </div>
+        </section>
+        <!-- 实用工具分类 -->
+        <section class="category" data-category="实用工具">
+          <div class="category-title">
+            <i class="fas fa-toolbox"></i>
+            <h2>实用工具</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.remove.bg/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="RemoveBG"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-scissors" aria-hidden="true"></i>
+              </div>
+              <h3>RemoveBG</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.ilovepdf.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ILovePDF"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+              </div>
+              <h3>ILovePDF</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.speedtest.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Speedtest"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-gauge" aria-hidden="true"></i>
+              </div>
+              <h3>Speedtest</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://tinypng.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TinyPNG"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-image" aria-hidden="true"></i>
+              </div>
+              <h3>TinyPNG</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://cli.im/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="草料二维码"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-qrcode" aria-hidden="true"></i>
+              </div>
+              <h3>草料二维码</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.processon.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ProcessOn"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+              </div>
+              <h3>ProcessOn</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.wolframalpha.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WolframAlpha"
+              ></a>
+              <div class="icon-wrapper">
+                <i
+                  class="fa-solid fa-square-root-variable"
+                  aria-hidden="true"
+                ></i>
+              </div>
+              <h3>WolframAlpha</h3>
+            </div>
+            <div class="link-card" data-category="实用工具">
+              <a
+                href="https://www.notion.so/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Notion"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-notion" aria-hidden="true"></i>
+              </div>
+              <h3>Notion</h3>
+            </div>
+          </div>
+        </section>
+        <!-- 科技资讯分类 -->
+        <section class="category" data-category="科技资讯">
+          <div class="category-title">
+            <i class="fas fa-flask"></i>
+            <h2>科技资讯</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.huxiu.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="虎嗅"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+              </div>
+              <h3>虎嗅</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://36kr.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="36氪"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+              </div>
+              <h3>36氪</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.techcrunch.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TechCrunch"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-medium" aria-hidden="true"></i>
+              </div>
+              <h3>TechCrunch</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://sspai.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="少数派"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+              </div>
+              <h3>少数派</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.solidot.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Solidot"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-circle-nodes" aria-hidden="true"></i>
+              </div>
+              <h3>Solidot</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.producthunt.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ProductHunt"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-product-hunt" aria-hidden="true"></i>
+              </div>
+              <h3>ProductHunt</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.infoq.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="InfoQ"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-info" aria-hidden="true"></i>
+              </div>
+              <h3>InfoQ</h3>
+            </div>
+            <div class="link-card" data-category="科技资讯">
+              <a
+                href="https://www.csdn.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="CSDN"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-code" aria-hidden="true"></i>
+              </div>
+              <h3>CSDN</h3>
+            </div>
+          </div>
+        </section>
+        <!-- 云存储分类 -->
+        <section class="category" data-category="云存储">
+          <div class="category-title">
+            <i class="fas fa-cloud"></i>
+            <h2>云存储</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://drive.google.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Google Drive"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-google-drive" aria-hidden="true"></i>
+              </div>
+              <h3>Google Drive</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://www.dropbox.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Dropbox"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-dropbox" aria-hidden="true"></i>
+              </div>
+              <h3>Dropbox</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://www.aliyundrive.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="阿里云盘"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-cloud" aria-hidden="true"></i>
+              </div>
+              <h3>阿里云盘</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://pan.baidu.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="百度网盘"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-database" aria-hidden="true"></i>
+              </div>
+              <h3>百度网盘</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://onedrive.live.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="OneDrive"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-microsoft" aria-hidden="true"></i>
+              </div>
+              <h3>OneDrive</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://www.icloud.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="iCloud"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-apple" aria-hidden="true"></i>
+              </div>
+              <h3>iCloud</h3>
+            </div>
+            <div class="link-card" data-category="云存储">
+              <a
+                href="https://www.weiyun.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="腾讯微云"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-tencent-weibo" aria-hidden="true"></i>
+              </div>
+              <h3>腾讯微云</h3>
+            </div>
+          </div>
+        </section>
+        <!-- 电子邮箱分类 -->
+        <section class="category" data-category="电子邮箱">
+          <div class="category-title">
+            <i class="fas fa-envelope"></i>
+            <h2>电子邮箱</h2>
+          </div>
+          <div class="resource-grid">
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://mail.google.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Gmail"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              </div>
+              <h3>Gmail</h3>
+            </div>
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://outlook.live.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Outlook"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-microsoft" aria-hidden="true"></i>
+              </div>
+              <h3>Outlook</h3>
+            </div>
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://mail.163.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="网易邮箱"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-at" aria-hidden="true"></i>
+              </div>
+              <h3>网易邮箱</h3>
+            </div>
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://mail.qq.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="QQ邮箱"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-qq" aria-hidden="true"></i>
+              </div>
+              <h3>QQ邮箱</h3>
+            </div>
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://mail.yahoo.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Yahoo Mail"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-brands fa-yahoo" aria-hidden="true"></i>
+              </div>
+              <h3>Yahoo Mail</h3>
+            </div>
+            <div class="link-card" data-category="电子邮箱">
+              <a
+                href="https://proton.me/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ProtonMail"
+              ></a>
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+              </div>
+              <h3>ProtonMail</h3>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="social-links">
+          <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        </div>
+        <p>© 2023 CreativeNav. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navBtns = document.querySelectorAll(".navbar button");
+        const categories = document.querySelectorAll(".main .category");
+
+        // 初始化：第一个分类显示
+        categories[0].classList.add("active");
+
+        navBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            navBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const catKey = btn.dataset.category;
+            categories.forEach((cat) => {
+              if (!catKey || catKey === "all") {
+                cat.classList.add("active");
+              } else {
+                cat.classList.remove("active");
+                if (cat.dataset.category === catKey) {
+                  cat.classList.add("active");
+                }
+              }
+            });
+            // 平滑滚动到顶部
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+        });
+
+        // 搜索过滤
+        const searchInput = document.querySelector(".search-bar input");
+        searchInput.addEventListener("input", () => {
+          const term = searchInput.value.trim().toLowerCase();
+          document.querySelectorAll(".link-card").forEach((card) => {
+            const label = card.querySelector("h3").textContent.toLowerCase();
+            card.style.display = label.includes(term) ? "block" : "none";
+          });
+        });
+
+        // 修复：点击卡片整体可跳转
+        document.querySelectorAll(".link-card").forEach((card) => {
+          card.addEventListener("click", (e) => {
+            // 避免点击a标签本身时重复触发
+            if (e.target.tagName.toLowerCase() === "a") return;
+            const link = card.querySelector("a");
+            if (link && link.href) {
+              window.open(link.href, "_blank");
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

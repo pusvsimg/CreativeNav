@@ -6,6 +6,20 @@ CreativeNav 是一个现代化的网页导航工具，提供分类整理的网�
 
 ## 部署指南
 
+本项目提供两种部署方式：
+
+1.  **多文件部署 (推荐)**：
+    *   上传 `index.html`, `style.css`, 和 `script.js` 到您的服务器或托管平台。
+    *   确保这三个文件位于同一目录下。
+    *   访问 `index.html` 即可。
+
+2.  **单文件部署**：
+    *   上传 `nav.html` 文件到您的服务器或托管平台。
+    *   `nav.html` 已包含所有必要的样式和脚本，无需其他文件。
+    *   直接访问 `nav.html` 即可。
+
+以下是一些具体的托管平台部署示例：
+
 ### Cloudflare Pages
 
 1. 登录 Cloudflare 账户
@@ -39,6 +53,20 @@ CreativeNav 是一个现代化的网页导航工具，提供分类整理的网�
 CreativeNav is a modern web navigation tool with categorized website links, featuring beautiful UI and responsive design.
 
 ## Deployment Guide
+
+This project offers two deployment methods:
+
+1.  **Multi-file Deployment (Recommended)**:
+    *   Upload `index.html`, `style.css`, and `script.js` to your server or hosting platform.
+    *   Ensure these three files are in the same directory.
+    *   Access `index.html`.
+
+2.  **Single-file Deployment**:
+    *   Upload the `nav.html` file to your server or hosting platform.
+    *   `nav.html` includes all necessary styles and scripts; no other files are needed.
+    *   Access `nav.html` directly.
+
+Below are deployment examples for specific hosting platforms:
 
 ### Cloudflare Pages
 
